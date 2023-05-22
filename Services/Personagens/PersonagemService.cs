@@ -11,27 +11,28 @@ namespace AppRpgEtec.Services.Personagens
     public class PersonagemService : Request
     {
         private readonly Request _request;
-        private const string apiUrlBase = "";
-
+        //private const string apiUrlBase = "https://bsite.net/luizfernando987/Personagens";
+        private const string apiUrlBase = "http://lzsouza.somee.com/RpgApi3AI/Personagens";
+        //xyz --> Site da sua API
         private string _token;
-
         public PersonagemService(string token)
         {
-            _request= new Request();
+            _request = new Request();
             _token = token;
         }
+
 
         public async Task<ObservableCollection<Personagem>> GetPersonagensAsync()
         {
             string urlComplementar = string.Format("{0}", "/GetAll");
-            ObservableCollection<Models.Personagem> listaPersonagens = await
-            _request.GetAsync<ObservableCollection<Models.Personagem>>(apiUrlBase + urlComplementar, _token);
+            ObservableCollection<Personagem> listaPersonagens = await
+      _request.GetAsync<ObservableCollection<Personagem>>(apiUrlBase + urlComplementar, _token);
             return listaPersonagens;
         }
         public async Task<Personagem> GetPersonagemAsync(int personagemId)
         {
             string urlComplementar = string.Format("/{0}", personagemId);
-            var personagem = await _request.GetAsync<Models.Personagem>(apiUrlBase + urlComplementar, _token);
+            var personagem = await _request.GetAsync<Personagem>(apiUrlBase + urlComplementar, _token);
             return personagem;
         }
         public async Task<int> PostPersonagemAsync(Personagem p)

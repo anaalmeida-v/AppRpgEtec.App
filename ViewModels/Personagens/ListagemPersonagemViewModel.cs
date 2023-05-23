@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace AppRpgEtec.ViewModels.Personagens
 {
@@ -13,29 +14,49 @@ namespace AppRpgEtec.ViewModels.Personagens
     {
         private PersonagemService pService;
         public ObservableCollection<Personagem> Personagens { get; set; }
-
-        public ListagemPersonagemViewModel() 
+        public ListagemPersonagemViewModel()
         {
             string token = Preferences.Get("UsuarioToken", string.Empty);
-            pService= new PersonagemService(token);
+            pService = new PersonagemService(token);
             Personagens = new ObservableCollection<Personagem>();
 
             _ = ObterPersonagens();
+            NovoPersonagem = new Command(async () => { await ExibirCadastroPersonagem(); });
         }
+
+        public ICommand NovoPersonagem { get; set; }
+
+        
+            
 
         public async Task ObterPersonagens()
         {
-            try
+            try //Junto com o Cacth evitará que erros fechem o aplicativo
             {
                 Personagens = await pService.GetPersonagensAsync();
-                OnPropertyChanged(nameof(Personagens));
+                OnPropertyChanged(nameof(Personagens)); //Informará a View que houve carregamento                       
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Ops", ex.Message + "Detalhes: " + ex.InnerException, "Ok");
+                //Captará o erro para exibir em tela
+                await Application.Current.MainPage
+                    .DisplayAlert("Ops", ex.Message + " Detalhes: " + ex.InnerException, "Ok");
             }
         }
-        
 
+        public async Task ExibirCadastroPersonagem()
+        {
+            try
+            {
+                await Shell.Current.GoToAsync("cadPersonagemView");
+            }
+            catch  (Exception ex) 
+            {
+                await Application.Current.MainPage
+                    .DisplayAlert("OpsAninha", ex.Message + " Detalhes: " + ex.InnerException, "Ok");
+            }
+        }
+
+       
     }
 }

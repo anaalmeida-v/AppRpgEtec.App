@@ -3,9 +3,11 @@ using Android.Runtime;
 
 namespace AppRpgEtec;
 
-[Application]
+
+[Application(UsesCleartextTraffic=true)]
 public class MainApplication : MauiApplication
 {
+
 	public MainApplication(IntPtr handle, JniHandleOwnership ownership)
 		: base(handle, ownership)
 	{
